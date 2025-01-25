@@ -3,6 +3,7 @@ import numpy as np
 from collections import OrderedDict
 
 
+
 class is_param:
 
     def __enter__(self):
@@ -11,7 +12,6 @@ class is_param:
     def __exit__(self, exc_type, exc_val, exc_tb):
         Model._is_param = False
 
-
 class is_delta:
 
     def __enter__(self):
@@ -19,7 +19,6 @@ class is_delta:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         Model._is_delta = False
-
 
 class Model(object):
     '''
@@ -42,6 +41,7 @@ class Model(object):
             _deltas[name] = value
         else:
             super().__setattr__(name, value)
+
 
     def __getattr__(self, name):
 

@@ -2,7 +2,6 @@
 from rnnmath import *
 from model import Model, is_param, is_delta
 
-
 class RNN(Model):
     '''
     This class implements Recurrent Neural Networks.
@@ -139,6 +138,7 @@ class RNN(Model):
             ##########################
             # --- your code here --- #
             ##########################
+
 
     def acc_deltas_bptt_np(self, x, d, y, s, steps):
         '''

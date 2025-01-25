@@ -437,10 +437,8 @@ if __name__ == "__main__":
         ##########################
 
         run_loss = -1
-        adjusted_loss = -1
 
-        print("Unadjusted: %.03f" % np.exp(run_loss))
-        print("Adjusted for missing vocab: %.03f" % np.exp(adjusted_loss))
+        print("Run loss: %.03f" % np.exp(run_loss))
 
     if mode == "train-np-rnn":
         '''
