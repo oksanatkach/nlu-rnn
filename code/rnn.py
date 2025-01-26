@@ -67,10 +67,9 @@ class RNN(Model):
         embeddings = self.V.transpose()[x]
 
         for t in range(len(x)):
-            # since s is offset by 1, s[t] actually means take the hidden state at time step t-1
-            y_hat, s_t = self.predict_next(embeddings[t], s[t])
-            s[t+1] = s_t
-            y[t] = y_hat
+            y_hat_t, s_t = self.predict_next(embeddings[t], s[t-1])
+            s[t] = s_t
+            y[t] = y_hat_t
 
         return y, s
 
@@ -105,16 +104,15 @@ class RNN(Model):
         for t in reversed(range(len(x))):
             # wrt W
             delta_out_t = make_onehot(d[t], self.vocab_size) - y[t]
-            self.deltaW += np.outer(delta_out_t, s[t+1])
+            self.deltaW += np.outer(delta_out_t, s[t])
 
             # wrt V
-            sigmoid_derivative = s[t+1] * (np.ones(s[t+1].shape) - s[t+1])
+            sigmoid_derivative = s[t] * (np.ones(s[t].shape) - s[t])
             delta_in_t = self.W.transpose() @ delta_out_t * sigmoid_derivative
-            self.deltaV += np.outer(delta_in_t, x[t])
+            self.deltaV += np.outer(delta_in_t, make_onehot(x[t], self.vocab_size))
 
             # wrt U
-            # s[t] actually means take the hidden state at time step t-1
-            self.deltaU += np.outer(delta_in_t, s[t])
+            self.deltaU += np.outer(delta_in_t, s[t-1])
 
     def acc_deltas_np(self, x, d, y, s):
         '''
@@ -168,7 +166,7 @@ class RNN(Model):
                 # wrt V
                 sigmoid_derivative = s[step + 1] * (np.ones(s[step + 1].shape) - s[step + 1])
                 delta_in_t = self.W.transpose() @ delta_out_t * sigmoid_derivative
-                self.deltaV += np.outer(delta_in_t, x[step])
+                self.deltaV += np.outer(delta_in_t, make_onehot(x[step], self.vocab_size))
 
                 # wrt U
                 # s[t] actually means take the hidden state at time step t-1

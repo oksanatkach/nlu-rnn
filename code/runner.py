@@ -93,6 +93,11 @@ class Runner(object):
         return mean_loss		average loss over all words in D
         '''
 
+        if not isinstance(X, np.ndarray):
+            X = np.array(X)
+        if not isinstance(D, np.ndarray):
+            D = np.array(D)
+
         length_sum = 0
         loss_sum = 0.
         for ind in range(X.shape[0]):
