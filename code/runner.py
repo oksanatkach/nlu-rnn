@@ -2,6 +2,8 @@
 import sys
 import time
 
+import numpy as np
+
 from utils import *
 from rnnmath import *
 from sys import stdout
@@ -40,13 +42,9 @@ class Runner(object):
         return loss		the combined loss for all words
         '''
 
-        loss = 0.
-
-        ##########################
-        # --- your code here --- #
-        ##########################
-
-        return loss
+        y_hat, _ = self.model.predict(x)
+        d_probs = y_hat[np.arange(d.shape[0]), d]
+        return np.sum(-np.log(d_probs))
 
     def compute_loss_np(self, x, d):
         '''
@@ -95,13 +93,15 @@ class Runner(object):
         return mean_loss		average loss over all words in D
         '''
 
-        mean_loss = 0.
+        length_sum = 0
+        loss_sum = 0.
+        for ind in range(X.shape[0]):
+            x = X[ind]
+            d = D[ind]
+            length_sum += x.shape[0]
+            loss_sum += self.compute_loss(x, d)
 
-        ##########################
-        # --- your code here --- #
-        ##########################
-
-        return mean_loss
+        return loss_sum / length_sum
 
     def train(self, X, D, X_dev, D_dev, epochs=10, learning_rate=0.5, anneal=5, back_steps=0, batch_size=100,
               min_change=0.0001, log=True):
@@ -382,6 +382,7 @@ class Runner(object):
         self.model.set_best_params()
 
         return best_loss
+
 
 if __name__ == "__main__":
 

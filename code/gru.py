@@ -56,7 +56,6 @@ class GRU(GRUAbstract):
 
         return y, s, h, z, r
 
-
     def acc_deltas_np(self, x, d, y, s):
         '''
         accumulate updates for Vr, Ur, Vh, Uh, Vz, Uz, W

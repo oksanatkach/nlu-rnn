@@ -1,4 +1,7 @@
 # coding: utf-8
+import numpy as np
+from scipy.misc import derivative
+
 from rnnmath import *
 from model import Model, is_param, is_delta
 
@@ -61,13 +64,26 @@ class RNN(Model):
         s = np.zeros((len(x) + 1, self.hidden_dims))
         y = np.zeros((len(x), self.out_vocab_size))
 
+        embeddings = self.V.transpose()[x]
+
         for t in range(len(x)):
-            pass
-            ##########################
-            # --- your code here --- #
-            ##########################
+            # since s is offset by 1, s[t] actually means take the hidden state at time step t-1
+            y_hat, s_t = self.predict_next(embeddings[t], s[t])
+            s[t+1] = s_t
+            y[t] = y_hat
 
         return y, s
+
+    def predict_next(self, emb_t, s_prev):
+        # hidden state at time step t
+        net_in_t = emb_t + self.U @ s_prev
+        s_t = sigmoid(net_in_t)
+
+        # prob distribution over the vocab at time step t
+        net_out_t = self.W @ s_t
+        y_hat = softmax(net_out_t)
+
+        return y_hat, s_t
     
     def acc_deltas(self, x, d, y, s):
         '''
@@ -87,10 +103,18 @@ class RNN(Model):
         '''
 
         for t in reversed(range(len(x))):
-            pass
-            ##########################
-            # --- your code here --- #
-            ##########################
+            # wrt W
+            delta_out_t = make_onehot(d[t], self.vocab_size) - y[t]
+            self.deltaW += np.outer(delta_out_t, s[t+1])
+
+            # wrt V
+            sigmoid_derivative = s[t+1] * (np.ones(s[t+1].shape) - s[t+1])
+            delta_in_t = self.W.transpose() @ delta_out_t * sigmoid_derivative
+            self.deltaV += np.outer(delta_in_t, x[t])
+
+            # wrt U
+            # s[t] actually means take the hidden state at time step t-1
+            self.deltaU += np.outer(delta_in_t, s[t])
 
     def acc_deltas_np(self, x, d, y, s):
         '''
@@ -134,11 +158,21 @@ class RNN(Model):
         '''
 
         for t in reversed(range(len(x))):
-            pass
-            ##########################
-            # --- your code here --- #
-            ##########################
 
+            # wrt W
+            delta_out_t = make_onehot(d[t], self.vocab_size) - y[t]
+            self.deltaW += np.outer(delta_out_t, s[t+1])
+
+            last_step = t-steps if (t-steps) >= -1 else -1
+            for step in range(t, last_step, -1):
+                # wrt V
+                sigmoid_derivative = s[step + 1] * (np.ones(s[step + 1].shape) - s[step + 1])
+                delta_in_t = self.W.transpose() @ delta_out_t * sigmoid_derivative
+                self.deltaV += np.outer(delta_in_t, x[step])
+
+                # wrt U
+                # s[t] actually means take the hidden state at time step t-1
+                self.deltaU += np.outer(delta_in_t, s[step])
 
     def acc_deltas_bptt_np(self, x, d, y, s, steps):
         '''
