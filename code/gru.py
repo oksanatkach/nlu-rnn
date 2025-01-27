@@ -67,7 +67,7 @@ class GRU(GRUAbstract):
         standard back propagation
 
         this should not update Vr, Ur, Vh, Uh, Vz, Uz, W directly. instead, calculate delta output (the gradient with
-        repsect to the output) and pass it to self.backward() method of GRUAbstract
+        respect to the output) and pass it to self.backward() method of GRUAbstract
 
         x	list of words, as indices, e.g.: [0, 4, 2]
         d	array with one element, as indices, e.g.: [0] or [1]
@@ -79,9 +79,8 @@ class GRU(GRUAbstract):
         no return values
         '''
 
-        ##########################
-        # --- your code here --- #
-        ##########################
+        t = len(x)-1
+        delta_output = make_onehot(d[0], self.vocab_size) - y[t]
         self.backward(x, t, s, delta_output)
 
     def acc_deltas_bptt_np(self, x, d, y, s, steps):
@@ -90,8 +89,8 @@ class GRU(GRUAbstract):
         back propagation through time BPTT
 
         this should not update Vr, Ur, Vh, Uh, Vz, Uz, W directly. instead, calculate delta output (the gradient with
-        respect to the output) and pass it to self.backward() method of GRUAbstract. This method has a setps
-        parameter for the num ber of backward steps.
+        respect to the output) and pass it to self.backward() method of GRUAbstract. This method has a steps
+        parameter for the number of backward steps.
 
         x	list of words, as indices, e.g.: [0, 4, 2]
         d	array with one element, as indices, e.g.: [0] or [1]
@@ -103,8 +102,6 @@ class GRU(GRUAbstract):
         no return values
         '''
 
-        ##########################
-        # --- your code here --- #
-        ##########################
-
+        t = len(x)-1
+        delta_output = make_onehot(d[0], self.vocab_size) - y[t]
         self.backward(x, t, s, delta_output, steps)

@@ -64,7 +64,7 @@ class RNN(Model):
         s = np.zeros((len(x) + 1, self.hidden_dims))
         y_hat = np.zeros((len(x), self.out_vocab_size))
 
-        embeddings = self.V.transpose()[x]
+        embeddings = self.V.T[x]
 
         for t in range(len(x)):
             y_hat_t, s_t = self.forward(embeddings[t], s[t-1])
@@ -107,7 +107,7 @@ class RNN(Model):
             self.deltaW += np.outer(delta_out_t, s[t])
 
             sigmoid_derivative = s[t] * (np.ones(s[t].shape) - s[t])
-            delta_in_t = self.W.transpose() @ delta_out_t * sigmoid_derivative
+            delta_in_t = self.W.T @ delta_out_t * sigmoid_derivative
 
             # wrt V
             self.deltaV += np.outer(delta_in_t, make_onehot(x[t], self.vocab_size))
@@ -138,7 +138,7 @@ class RNN(Model):
         self.deltaW += np.outer(delta_out_t, s[t])
 
         sigmoid_derivative = s[t] * (np.ones(s[t].shape) - s[t])
-        delta_in_t = self.W.transpose() @ delta_out_t * sigmoid_derivative
+        delta_in_t = self.W.T @ delta_out_t * sigmoid_derivative
 
         # wrt V
         self.deltaV += np.outer(delta_in_t, make_onehot(x[t], self.vocab_size))
@@ -175,9 +175,9 @@ class RNN(Model):
 
                 sigmoid_derivative = s[step] * (np.ones(s[step].shape) - s[step])
                 if step == t:
-                    delta_in_t = self.W.transpose() @ delta_out_t * sigmoid_derivative
+                    delta_in_t = self.W.T @ delta_out_t * sigmoid_derivative
                 else:
-                    delta_in_t = self.U.transpose() @ delta_in_t * sigmoid_derivative
+                    delta_in_t = self.U.T @ delta_in_t * sigmoid_derivative
 
                 # wrt V
                 self.deltaV += np.outer(delta_in_t, make_onehot(x[step], self.vocab_size))
@@ -213,9 +213,9 @@ class RNN(Model):
 
             sigmoid_derivative = s[step] * (np.ones(s[step].shape) - s[step])
             if step == t:
-                delta_in_t = self.W.transpose() @ delta_out_t * sigmoid_derivative
+                delta_in_t = self.W.T @ delta_out_t * sigmoid_derivative
             else:
-                delta_in_t = self.U.transpose() @ delta_in_t * sigmoid_derivative
+                delta_in_t = self.U.T @ delta_in_t * sigmoid_derivative
 
             # wrt V
             self.deltaV += np.outer(delta_in_t, make_onehot(x[step], self.vocab_size))
