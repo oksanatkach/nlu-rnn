@@ -317,33 +317,33 @@ r.deltaW.fill(0)
 
 r.acc_deltas_bptt_np(x, d_np, y, s, 3)
 
-# print("\n### TEST 10: binary prediction GRU with 3 steps")
-# if not (np.isclose(deltaUr_3_exp_np, r.deltaUr).all() and \
-#         np.isclose(deltaVr_3_exp_np, r.deltaVr).all() and \
-#         np.isclose(deltaUz_3_exp_np, r.deltaUz).all() and \
-#         np.isclose(deltaVz_3_exp_np, r.deltaVz).all() and \
-#         np.isclose(deltaUh_3_exp_np, r.deltaUh).all() and \
-#         np.isclose(deltaVh_3_exp_np, r.deltaVh).all() and \
-#         np.isclose(deltaW_GRU_3_exp_np, r.deltaW).all()):
-# 	print("    deltaUr expected\n{0}".format(deltaUr_3_exp_np))
-# 	print("    deltaUr received\n{0}".format(r.deltaUr))
-# 	print("    deltaVr expected\n{0}".format(deltaVr_3_exp_np))
-# 	print("    deltaVr received\n{0}".format(r.deltaVr))
-# 	print("    deltaUz expected\n{0}".format(deltaUz_3_exp_np))
-# 	print("    deltaUz received\n{0}".format(r.deltaUz))
-# 	print("    deltaVz expected\n{0}".format(deltaVz_3_exp_np))
-# 	print("    deltaVz received\n{0}".format(r.deltaVz))
-# 	print("    deltaUh expected\n{0}".format(deltaUh_3_exp_np))
-# 	print("    deltaUh received\n{0}".format(r.deltaUh))
-# 	print("    deltaVh expected\n{0}".format(deltaVh_3_exp_np))
-# 	print("    deltaVh received\n{0}".format(r.deltaVh))
-# 	print("    deltaW expected\n{0}".format(deltaW_GRU_3_exp_np))
-# 	print("    deltaW received\n{0}".format(r.deltaW))
-# else:
-# 	print("deltaUr passed")
-# 	print("deltaVr passed")
-# 	print("deltaUz passed")
-# 	print("deltaVz passed")
-# 	print("deltaUh passed")
-# 	print("deltaVh passed")
-# 	print("deltaW  passed")
+print("\n### TEST 10: binary prediction GRU with 3 steps")
+if not (np.isclose(deltaUr_3_exp_np, r.deltaUr).all() and \
+        np.isclose(deltaVr_3_exp_np, r.deltaVr).all() and \
+        np.isclose(deltaUz_3_exp_np, r.deltaUz).all() and \
+        np.isclose(deltaVz_3_exp_np, r.deltaVz).all() and \
+        np.isclose(deltaUh_3_exp_np, r.deltaUh).all() and \
+        np.isclose(deltaVh_3_exp_np, r.deltaVh).all() and \
+        np.isclose(deltaW_GRU_3_exp_np, r.deltaW).all()):
+	print("    deltaUr expected\n{0}".format(deltaUr_3_exp_np))
+	print("    deltaUr received\n{0}".format(r.deltaUr))
+	print("    deltaVr expected\n{0}".format(deltaVr_3_exp_np))
+	print("    deltaVr received\n{0}".format(r.deltaVr))
+	print("    deltaUz expected\n{0}".format(deltaUz_3_exp_np))
+	print("    deltaUz received\n{0}".format(r.deltaUz))
+	print("    deltaVz expected\n{0}".format(deltaVz_3_exp_np))
+	print("    deltaVz received\n{0}".format(r.deltaVz))
+	print("    deltaUh expected\n{0}".format(deltaUh_3_exp_np))
+	print("    deltaUh received\n{0}".format(r.deltaUh))
+	print("    deltaVh expected\n{0}".format(deltaVh_3_exp_np))
+	print("    deltaVh received\n{0}".format(r.deltaVh))
+	print("    deltaW expected\n{0}".format(deltaW_GRU_3_exp_np))
+	print("    deltaW received\n{0}".format(r.deltaW))
+else:
+	print("deltaUr passed")
+	print("deltaVr passed")
+	print("deltaUz passed")
+	print("deltaVz passed")
+	print("deltaUh passed")
+	print("deltaVh passed")
+	print("deltaW  passed")
