@@ -1,4 +1,5 @@
 # coding: utf-8
+import numpy as np
 
 from rnnmath import *
 from gru_abstract import GRUAbstract
@@ -50,11 +51,15 @@ class GRU(GRUAbstract):
 
         '''
 
-        ##########################
-        # --- your code here --- #
-        ##########################
+        x = make_onehot(x, self.vocab_size)
+        r_t = sigmoid(self.Vr @ x + self.Ur @ s_previous)
+        z_t = sigmoid(self.Vz @ x + self.Uz @ s_previous)
+        h_t = np.tanh(self.Vh @ x + self.Uh @ (r_t * s_previous))
+        s_t = z_t * s_previous + (1 - z_t) * h_t
+        net_out_t = self.W @ s_t
+        y_hat_t = softmax(net_out_t)
 
-        return y, s, h, z, r
+        return y_hat_t, s_t, h_t, z_t, r_t
 
     def acc_deltas_np(self, x, d, y, s):
         '''

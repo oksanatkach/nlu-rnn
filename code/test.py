@@ -292,32 +292,32 @@ deltaUh_3_exp_np = [[0.01726854, 0.02951899], [0.00359722, 0.00635103]]
 deltaVh_3_exp_np = [[0.01217558, 0.03100759, 0.01551138], [0.00432377, 0.00515261, 0.00275538]]
 deltaW_GRU_3_exp_np = [[ 0.32036604, 0.47217857], [-0.17640132, -0.25999298], [-0.14396472, -0.21218559]]
 
-# y,s = r.predict(x)
-# r.deltaUr.fill(0)
-# r.deltaVr.fill(0)
-# r.deltaUz.fill(0)
-# r.deltaVz.fill(0)
-# r.deltaUh.fill(0)
-# r.deltaVh.fill(0)
-# r.deltaW.fill(0)
+y,s = r.predict(x)
 
-# r.acc_deltas_bptt_np(x, d_np, y, s, 3)
-
-
-# print("\n### TEST 9: predicting y,s and deltas GRU")
-# if not np.isclose(y_exp, y, rtol=1e-08, atol=1e-08).all():
-# 	print("y expected\n{0}".format(y_exp))
-# 	print("y received\n{0}".format(y))
-# else:
-# 	print("y passed")
-# if not np.isclose(s_exp, s, rtol=1e-08, atol=1e-08).all():
-# 	print("\ns expected\n{0}".format(s_exp))
-# 	print("s received\n{0}".format(s))
-# else:
-# 	print("s passed")
+print("\n### TEST 9: predicting y,s and deltas GRU")
+if not np.isclose(y_exp, y, rtol=1e-08, atol=1e-08).all():
+	print("y expected\n{0}".format(y_exp))
+	print("y received\n{0}".format(y))
+else:
+	print("y passed")
+if not np.isclose(s_exp, s, rtol=1e-08, atol=1e-08).all():
+	print("\ns expected\n{0}".format(s_exp))
+	print("s received\n{0}".format(s))
+else:
+	print("s passed")
 
 
-# print("\n### binary prediction GRU with 3 steps")
+r.deltaUr.fill(0)
+r.deltaVr.fill(0)
+r.deltaUz.fill(0)
+r.deltaVz.fill(0)
+r.deltaUh.fill(0)
+r.deltaVh.fill(0)
+r.deltaW.fill(0)
+
+r.acc_deltas_bptt_np(x, d_np, y, s, 3)
+
+# print("\n### TEST 10: binary prediction GRU with 3 steps")
 # if not (np.isclose(deltaUr_3_exp_np, r.deltaUr).all() and \
 #         np.isclose(deltaVr_3_exp_np, r.deltaVr).all() and \
 #         np.isclose(deltaUz_3_exp_np, r.deltaUz).all() and \
