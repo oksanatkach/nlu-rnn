@@ -62,18 +62,18 @@ class RNN(Model):
         # s has one more row, since we need to look back even at time 0 (s(t=0-1) will just be [0. 0. ....] )
 
         s = np.zeros((len(x) + 1, self.hidden_dims))
-        y = np.zeros((len(x), self.out_vocab_size))
+        y_hat = np.zeros((len(x), self.out_vocab_size))
 
         embeddings = self.V.transpose()[x]
 
         for t in range(len(x)):
-            y_hat_t, s_t = self.predict_next(embeddings[t], s[t-1])
+            y_hat_t, s_t = self.forward(embeddings[t], s[t-1])
             s[t] = s_t
-            y[t] = y_hat_t
+            y_hat[t] = y_hat_t
 
-        return y, s
+        return y_hat, s
 
-    def predict_next(self, emb_t, s_prev):
+    def forward(self, emb_t, s_prev):
         # hidden state at time step t
         net_in_t = emb_t + self.U @ s_prev
         s_t = sigmoid(net_in_t)
@@ -132,11 +132,19 @@ class RNN(Model):
         
         no return values
         '''
-        pass
 
-        ##########################
-        # --- your code here --- #
-        ##########################
+        t = len(x)-1
+        delta_out_t = make_onehot(d[0], self.vocab_size) - y[t]
+        self.deltaW += np.outer(delta_out_t, s[t])
+
+        sigmoid_derivative = s[t] * (np.ones(s[t].shape) - s[t])
+        delta_in_t = self.W.transpose() @ delta_out_t * sigmoid_derivative
+
+        # wrt V
+        self.deltaV += np.outer(delta_in_t, make_onehot(x[t], self.vocab_size))
+
+        # wrt U
+        self.deltaU += np.outer(delta_in_t, s[t-1])
         
     def acc_deltas_bptt(self, x, d, y, s, steps):
         '''
@@ -195,8 +203,22 @@ class RNN(Model):
         
         no return values
         '''
-        pass
+        t = len(x)-1
+        delta_out_t = make_onehot(d[0], self.vocab_size) - y[t]
+        self.deltaW += np.outer(delta_out_t, s[t])
 
-        ##########################
-        # --- your code here --- #
-        ##########################
+        delta_in_t = None
+        last_step = t - steps - 1 if (t - steps - 1) >= -1 else -1
+        for step in range(t, last_step, -1):
+
+            sigmoid_derivative = s[step] * (np.ones(s[step].shape) - s[step])
+            if step == t:
+                delta_in_t = self.W.transpose() @ delta_out_t * sigmoid_derivative
+            else:
+                delta_in_t = self.U.transpose() @ delta_in_t * sigmoid_derivative
+
+            # wrt V
+            self.deltaV += np.outer(delta_in_t, make_onehot(x[step], self.vocab_size))
+
+            # wrt U
+            self.deltaU += np.outer(delta_in_t, s[step-1])

@@ -1,13 +1,13 @@
 import numpy as np
 import pandas as pd
-from utils import invert_dict, load_lm_dataset, docs_to_indices, seqs_to_lmXY
+from utils import invert_dict, load_np_dataset, docs_to_indices, seqs_to_npXY
 from rnnmath import fraq_loss
 from rnn import RNN
 from runner import Runner
 
 data_folder = '../data/'
 np.random.seed(2018)
-train_size = 1000
+train_size = 10000
 dev_size = 1000
 vocab_size = 2000
 
@@ -26,28 +26,19 @@ print(
     "Retained %d words from %d (%.02f%% of all tokens)\n" % (
         vocab_size, len(vocab), 100 * (1 - fraction_lost)))
 
-docs = load_lm_dataset(data_folder + '/wiki-train.txt')
-S_train = docs_to_indices(docs, word_to_num, 1, 1)
-X_train, D_train = seqs_to_lmXY(S_train)
-
-# Load the dev set (for tuning hyperparameters)
-docs = load_lm_dataset(data_folder + '/wiki-dev.txt')
-S_dev = docs_to_indices(docs, word_to_num, 1, 1)
-X_dev, D_dev = seqs_to_lmXY(S_dev)
+# load training data
+sents = load_np_dataset(data_folder + '/wiki-train.txt')
+S_train = docs_to_indices(sents, word_to_num, 0, 0)
+X_train, D_train = seqs_to_npXY(S_train)
 
 X_train = X_train[:train_size]
-D_train = D_train[:train_size]
+Y_train = D_train[:train_size]
+
+# load development data
+sents = load_np_dataset(data_folder + '/wiki-dev.txt')
+S_dev = docs_to_indices(sents, word_to_num, 0, 0)
+X_dev, D_dev = seqs_to_npXY(S_dev)
+
 X_dev = X_dev[:dev_size]
 D_dev = D_dev[:dev_size]
 
-# q = best unigram frequency from omitted vocab
-# this is the best expected loss out of that set
-q = vocab.freq[vocab_size] / sum(vocab.freq[vocab_size:])
-
-my_runner = Runner(RNN(vocab_size, hdim, vocab_size))
-x = X_train[0]
-d = D_train[0]
-y, s = my_runner.model.predict(x)
-# print(my_runner.model.acc_deltas(x, d, y, s))
-print(my_runner.model.acc_deltas_bptt(x, d, y, s, 5))
-# print(my_runner.model._deltas)

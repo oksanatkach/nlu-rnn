@@ -58,13 +58,10 @@ class Runner(object):
         return loss		we only take the prediction from the last time step
         '''
 
-        loss = 0.
-
-        ##########################
-        # --- your code here --- #
-        ##########################
-
-        return loss
+        pred_dists, _ = self.model.predict(x)
+        y_true = d[0]
+        y_pred = pred_dists[-1][y_true]
+        return -np.log(y_pred)
 
     def compute_acc_np(self, x, d):
         '''
@@ -77,11 +74,10 @@ class Runner(object):
         return 1 if argmax(y[t]) == d[0], 0 otherwise
         '''
 
-        ##########################
-        # --- your code here --- #
-        ##########################
-
-        return 0
+        pred_dists, _ = self.model.predict(x)
+        y_true = d[0]
+        y_hat = pred_dists[-1]
+        return 1 if y_hat.argmax() == y_true else 0
 
     def compute_mean_loss(self, X, D):
         '''

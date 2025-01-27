@@ -171,127 +171,127 @@ else:
 
 # BINARY PREDICTION TEST
 
-# print("\n### computing binary prediction loss")
-# np_loss = p.compute_loss_np(x,d_np)
-# if not np.isclose(np_loss_expected, np_loss, rtol=1e-08, atol=1e-08):
-# 	print("np loss expected: {0}".format(np_loss_expected))
-# 	print("np loss received: {0}".format(np_loss))
-# else:
-# 	print("np loss passed")
+print("\n### TEST 5: computing binary prediction loss")
+np_loss = p.compute_loss_np(x, d_np)
+if not np.isclose(np_loss_expected, np_loss, rtol=1e-08, atol=1e-08):
+	print("np loss expected: {0}".format(np_loss_expected))
+	print("np loss received: {0}".format(np_loss))
+else:
+	print("np loss passed")
 
-# print("\n### binary prediction BP")
-# r.deltaU.fill(0)
-# r.deltaV.fill(0)
-# r.deltaW.fill(0)
-#
-# r.acc_deltas_np(x,d_np,y,s)
-# if not np.isclose(deltaU_1_exp_np, r.deltaU).all():
-# 	print("\ndeltaU expected\n{0}".format(deltaU_1_exp_np))
-# 	print("deltaU received\n{0}".format(r.deltaU))
-# else:
-# 	print("deltaU passed")
-# if not np.isclose(deltaV_1_exp_np, r.deltaV).all():
-# 	print("\ndeltaV expected\n{0}".format(deltaV_1_exp_np))
-# 	print("deltaV received\n{0}".format(r.deltaV))
-# else:
-# 	print("deltaV passed")
-# if not np.isclose(deltaW_1_exp_np, r.deltaW).all():
-# 	print("\ndeltaW expected\n{0}".format(deltaW_1_exp_np))
-# 	print("deltaW received\n{0}".format(r.deltaW))
-# else:
-# 	print("deltaW passed")
+print("\n### TEST 6: binary prediction BP")
+r.deltaU.fill(0)
+r.deltaV.fill(0)
+r.deltaW.fill(0)
 
-
-# print("\n### binary prediction BPTT with 3 steps")
-# r.deltaU.fill(0)
-# r.deltaV.fill(0)
-# r.deltaW.fill(0)
-#
-# r.acc_deltas_bptt_np(x,d_np,y,s,3)
-# if not np.isclose(deltaU_3_exp_np, r.deltaU).all():
-# 	print("\ndeltaU expected\n{0}".format(deltaU_3_exp_np))
-# 	print("deltaU received\n{0}".format(r.deltaU))
-# else:
-# 	print("deltaU passed")
-# if not np.isclose(deltaV_3_exp_np, r.deltaV).all():
-# 	print("\ndeltaV expected\n{0}".format(deltaV_3_exp_np))
-# 	print("deltaV received\n{0}".format(r.deltaV))
-# else:
-# 	print("deltaV passed")
-# if not np.isclose(deltaW_3_exp_np, r.deltaW).all():
-# 	print("\ndeltaW expected\n{0}".format(deltaW_3_exp_np))
-# 	print("deltaW received\n{0}".format(r.deltaW))
-# else:
-# 	print("deltaW passed")
+r.acc_deltas_np(x,d_np,y,s)
+if not np.isclose(deltaU_1_exp_np, r.deltaU).all():
+	print("\ndeltaU expected\n{0}".format(deltaU_1_exp_np))
+	print("deltaU received\n{0}".format(r.deltaU))
+else:
+	print("deltaU passed")
+if not np.isclose(deltaV_1_exp_np, r.deltaV).all():
+	print("\ndeltaV expected\n{0}".format(deltaV_1_exp_np))
+	print("deltaV received\n{0}".format(r.deltaV))
+else:
+	print("deltaV passed")
+if not np.isclose(deltaW_1_exp_np, r.deltaW).all():
+	print("\ndeltaW expected\n{0}".format(deltaW_1_exp_np))
+	print("deltaW received\n{0}".format(r.deltaW))
+else:
+	print("deltaW passed")
 
 
-# print("\n### compute accuracy for binary prediction")
-# acc = p.compute_acc_np(x, d_np)
-# if acc != acc_expected:
-# 	print("acc expected\n{0}".format(acc_expected))
-# 	print("acc received\n{0}".format(acc))
-# else:
-# 	print("acc passed")
+print("\n### TEST 7: binary prediction BPTT with 3 steps")
+r.deltaU.fill(0)
+r.deltaV.fill(0)
+r.deltaW.fill(0)
+
+r.acc_deltas_bptt_np(x,d_np,y,s,3)
+if not np.isclose(deltaU_3_exp_np, r.deltaU).all():
+	print("\ndeltaU expected\n{0}".format(deltaU_3_exp_np))
+	print("deltaU received\n{0}".format(r.deltaU))
+else:
+	print("deltaU passed")
+if not np.isclose(deltaV_3_exp_np, r.deltaV).all():
+	print("\ndeltaV expected\n{0}".format(deltaV_3_exp_np))
+	print("deltaV received\n{0}".format(r.deltaV))
+else:
+	print("deltaV passed")
+if not np.isclose(deltaW_3_exp_np, r.deltaW).all():
+	print("\ndeltaW expected\n{0}".format(deltaW_3_exp_np))
+	print("deltaW received\n{0}".format(r.deltaW))
+else:
+	print("deltaW passed")
+
+
+print("\n### TEST 8: compute accuracy for binary prediction")
+acc = p.compute_acc_np(x, d_np)
+if acc != acc_expected:
+	print("acc expected\n{0}".format(acc_expected))
+	print("acc received\n{0}".format(acc))
+else:
+	print("acc passed")
 
 # GRU Test
 
-# r = GRU(vocabsize,hdim,vocabsize)
-# r.Vh[0][0]=0.7
-# r.Vh[0][1]=0.3
-# r.Vh[0][2]=0.4
-# r.Vh[1][0]=0.6
-# r.Vh[1][1]=0.9
-# r.Vh[1][2]=0.7
-#
-# r.Uh[0][0]=0.6
-# r.Uh[0][1]=0.4
-# r.Uh[1][0]=0.3
-# r.Uh[1][1]=0.8
-#
-# r.Vr[0][0]=0.2
-# r.Vr[0][1]=0.7
-# r.Vr[0][2]=0.1
-# r.Vr[1][0]=0.9
-# r.Vr[1][1]=0.6
-# r.Vr[1][2]=0.5
-#
-# r.Ur[0][0]=0.1
-# r.Ur[0][1]=0.9
-# r.Ur[1][0]=0.4
-# r.Ur[1][1]=0.6
-#
-# r.Vz[0][0]=0.6
-# r.Vz[0][1]=0.8
-# r.Vz[0][2]=0.9
-# r.Vz[1][0]=0.3
-# r.Vz[1][1]=0.2
-# r.Vz[1][2]=0.7
-#
-# r.Uz[0][0]=0.9
-# r.Uz[0][1]=0.5
-# r.Uz[1][0]=0.9
-# r.Uz[1][1]=0.3
-#
-# r.W[0][0]=0.6
-# r.W[0][1]=0.5
-# r.W[1][0]=0.2
-# r.W[1][1]=0.6
-# r.W[2][0]=0.4
-# r.W[2][1]=0.2
-#
-# p = Runner(r)
-#
-# y_exp = np.array([[0.3528942, 0.33141165, 0.31569415], [0.36113545, 0.33936667, 0.29949788], [0.36692804, 0.33951603, 0.29355593], [0.37231812, 0.3423382,  0.28534368], [0.37673929, 0.34350021, 0.2797605 ], [0.38331333, 0.33917522, 0.27751145], [0.38581534, 0.33818498, 0.27599968]])
-# s_exp = np.array([[0.21415391, 0.22854546], [0.26690114, 0.44588503], [0.32573672, 0.52650084], [0.36993061, 0.64022728], [0.41051185, 0.71839057], [0.49285591, 0.74806453], [0.52161192, 0.76878925], [0.,         0.        ]])
-#
-# deltaUr_3_exp_np = [[0.00193795, 0.00314452], [0.00195132, 0.00320871]]
-# deltaVr_3_exp_np = [[0.00103786, 0.00190269, 0.00172727], [0.00109623, 0.0025203, 0.00126202]]
-# deltaUz_3_exp_np = [[-0.00942043, -0.01576331], [-0.00216407, -0.00358799]]
-# deltaVz_3_exp_np = [[-0.01069625, -0.00785168, -0.00464374], [-0.00094875, -0.00397553, -0.00080911]]
-# deltaUh_3_exp_np = [[0.01726854, 0.02951899], [0.00359722, 0.00635103]]
-# deltaVh_3_exp_np = [[0.01217558, 0.03100759, 0.01551138], [0.00432377, 0.00515261, 0.00275538]]
-# deltaW_GRU_3_exp_np = [[ 0.32036604, 0.47217857], [-0.17640132, -0.25999298], [-0.14396472, -0.21218559]]
-#
+r = GRU(vocabsize,hdim,vocabsize)
+r.Vh[0][0]=0.7
+r.Vh[0][1]=0.3
+r.Vh[0][2]=0.4
+r.Vh[1][0]=0.6
+r.Vh[1][1]=0.9
+r.Vh[1][2]=0.7
+
+r.Uh[0][0]=0.6
+r.Uh[0][1]=0.4
+r.Uh[1][0]=0.3
+r.Uh[1][1]=0.8
+
+r.Vr[0][0]=0.2
+r.Vr[0][1]=0.7
+r.Vr[0][2]=0.1
+r.Vr[1][0]=0.9
+r.Vr[1][1]=0.6
+r.Vr[1][2]=0.5
+
+r.Ur[0][0]=0.1
+r.Ur[0][1]=0.9
+r.Ur[1][0]=0.4
+r.Ur[1][1]=0.6
+
+r.Vz[0][0]=0.6
+r.Vz[0][1]=0.8
+r.Vz[0][2]=0.9
+r.Vz[1][0]=0.3
+r.Vz[1][1]=0.2
+r.Vz[1][2]=0.7
+
+r.Uz[0][0]=0.9
+r.Uz[0][1]=0.5
+r.Uz[1][0]=0.9
+r.Uz[1][1]=0.3
+
+r.W[0][0]=0.6
+r.W[0][1]=0.5
+r.W[1][0]=0.2
+r.W[1][1]=0.6
+r.W[2][0]=0.4
+r.W[2][1]=0.2
+
+p = Runner(r)
+
+y_exp = np.array([[0.3528942, 0.33141165, 0.31569415], [0.36113545, 0.33936667, 0.29949788], [0.36692804, 0.33951603, 0.29355593], [0.37231812, 0.3423382,  0.28534368], [0.37673929, 0.34350021, 0.2797605 ], [0.38331333, 0.33917522, 0.27751145], [0.38581534, 0.33818498, 0.27599968]])
+s_exp = np.array([[0.21415391, 0.22854546], [0.26690114, 0.44588503], [0.32573672, 0.52650084], [0.36993061, 0.64022728], [0.41051185, 0.71839057], [0.49285591, 0.74806453], [0.52161192, 0.76878925], [0.,         0.        ]])
+
+deltaUr_3_exp_np = [[0.00193795, 0.00314452], [0.00195132, 0.00320871]]
+deltaVr_3_exp_np = [[0.00103786, 0.00190269, 0.00172727], [0.00109623, 0.0025203, 0.00126202]]
+deltaUz_3_exp_np = [[-0.00942043, -0.01576331], [-0.00216407, -0.00358799]]
+deltaVz_3_exp_np = [[-0.01069625, -0.00785168, -0.00464374], [-0.00094875, -0.00397553, -0.00080911]]
+deltaUh_3_exp_np = [[0.01726854, 0.02951899], [0.00359722, 0.00635103]]
+deltaVh_3_exp_np = [[0.01217558, 0.03100759, 0.01551138], [0.00432377, 0.00515261, 0.00275538]]
+deltaW_GRU_3_exp_np = [[ 0.32036604, 0.47217857], [-0.17640132, -0.25999298], [-0.14396472, -0.21218559]]
+
 # y,s = r.predict(x)
 # r.deltaUr.fill(0)
 # r.deltaVr.fill(0)
@@ -300,11 +300,11 @@ else:
 # r.deltaUh.fill(0)
 # r.deltaVh.fill(0)
 # r.deltaW.fill(0)
-#
+
 # r.acc_deltas_bptt_np(x, d_np, y, s, 3)
 
 
-# print("\n### predicting y,s and deltas GRU")
+# print("\n### TEST 9: predicting y,s and deltas GRU")
 # if not np.isclose(y_exp, y, rtol=1e-08, atol=1e-08).all():
 # 	print("y expected\n{0}".format(y_exp))
 # 	print("y received\n{0}".format(y))
