@@ -1,4 +1,3 @@
-import numpy as np
 from rnn import *
 from gru import GRU
 from runner import Runner
