@@ -62,10 +62,14 @@ class RNN(Model):
         y = np.zeros((len(x), self.out_vocab_size))
 
         for t in range(len(x)):
-            pass
             ##########################
             # --- your code here --- #
             ##########################
+            input_onehot = make_onehot(x[t], self.vocab_size)
+            prev_hidden = s[t-1]
+
+            s[t] = sigmoid(self.V @ input_onehot + self.U @ prev_hidden)
+            y[t] = softmax(self.W @ s[t])
 
         return y, s
     
@@ -87,10 +91,22 @@ class RNN(Model):
         '''
 
         for t in reversed(range(len(x))):
-            pass
             ##########################
             # --- your code here --- #
             ##########################
+            y_t = y[t]
+            s_t = s[t]
+            s_prev = s[t - 1]
+            x_t = make_onehot(x[t], self.vocab_size)
+            d_t = make_onehot(d[t], self.out_vocab_size)
+
+            delta_out_t = d_t - y_t
+            self.deltaW += np.outer(delta_out_t, s_t)
+
+            delta_in_t = (self.W.T @ delta_out_t) * (s_t * (1 - s_t))
+            self.deltaV += np.outer(delta_in_t, x_t)
+
+            self.deltaU += np.outer(delta_in_t, s_prev)
 
     def acc_deltas_np(self, x, d, y, s):
         '''
@@ -134,10 +150,32 @@ class RNN(Model):
         '''
 
         for t in reversed(range(len(x))):
-            pass
             ##########################
             # --- your code here --- #
             ##########################
+            y_t = y[t]
+            s_t = s[t]
+            d_t = make_onehot(d[t], self.out_vocab_size)
+
+            delta_out_t = d_t - y_t
+            self.deltaW += np.outer(delta_out_t, s_t)
+
+            delta_in_current = None
+            possible_steps = min(t, steps)
+
+            for tau in range(possible_steps+1):
+                x_current = make_onehot(x[t-tau], self.vocab_size)
+                s_current = s[t-tau]
+                s_prev_current = s[t-tau-1]
+
+                if tau:
+                    delta_in_current = (self.U.T @ delta_in_current) * (s_current * (1 - s_current))
+                else:
+                    delta_in_current = (self.W.T @ delta_out_t) * (s_current * (1 - s_current))
+
+                self.deltaV += np.outer(delta_in_current, x_current)
+
+                self.deltaU += np.outer(delta_in_current, s_prev_current)
 
 
     def acc_deltas_bptt_np(self, x, d, y, s, steps):

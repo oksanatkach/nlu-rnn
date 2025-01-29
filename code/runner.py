@@ -45,6 +45,11 @@ class Runner(object):
         ##########################
         # --- your code here --- #
         ##########################
+        y_hats, _ = self.model.predict(x)
+
+        for t in range(len(y_hats)):
+            true_onehot = make_onehot(d[t], self.model.out_vocab_size)
+            loss -= true_onehot @ np.log(y_hats[t])
 
         return loss
 
@@ -94,12 +99,17 @@ class Runner(object):
 
         return mean_loss		average loss over all words in D
         '''
-
-        mean_loss = 0.
-
         ##########################
         # --- your code here --- #
         ##########################
+        total_loss = 0.
+        word_count = 0
+
+        for x, d in zip(X, D):
+            total_loss += self.compute_loss(x, d)
+            word_count += len(x)
+
+        mean_loss = total_loss / word_count
 
         return mean_loss
 
@@ -435,8 +445,12 @@ if __name__ == "__main__":
         ##########################
         # --- your code here --- #
         ##########################
+        # TODO verify this, save matrices
+        rnn = RNN(vocab_size, hdim, vocab_size)
+        runner = Runner(rnn)
 
-        run_loss = -1
+        run_loss = runner.train(X_train, D_train, X_dev, D_dev, learning_rate=lr, back_steps=lookback)
+        final_params = {"U": runner.model.U, "V": runner.model.V, "W": runner.model.W}
 
         print("Run loss: %.03f" % np.exp(run_loss))
 
