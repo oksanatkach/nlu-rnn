@@ -70,6 +70,9 @@ class Runner(object):
         ##########################
         # --- your code here --- #
         ##########################
+        y_hats, _ = self.model.predict(x)
+        true_onehot = make_onehot(d[0], self.model.out_vocab_size)
+        loss -= true_onehot @ np.log(y_hats[-1])
 
         return loss
 
@@ -87,8 +90,9 @@ class Runner(object):
         ##########################
         # --- your code here --- #
         ##########################
+        y_hats, _ = self.model.predict(x)
 
-        return 0
+        return int(np.argmax(y_hats[-1]) == d[0])
 
     def compute_mean_loss(self, X, D):
         '''

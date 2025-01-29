@@ -103,7 +103,7 @@ class RNN(Model):
             delta_out_t = d_t - y_t
             self.deltaW += np.outer(delta_out_t, s_t)
 
-            delta_in_t = (self.W.T @ delta_out_t) * (s_t * (1 - s_t))
+            delta_in_t = (self.W.T @ delta_out_t) * grad(s_t)
             self.deltaV += np.outer(delta_in_t, x_t)
 
             self.deltaU += np.outer(delta_in_t, s_prev)
@@ -125,11 +125,26 @@ class RNN(Model):
         
         no return values
         '''
-        pass
-
         ##########################
         # --- your code here --- #
         ##########################
+        t = len(x) - 1
+
+        # copied from non-np function
+        y_t = y[t]
+        s_t = s[t]
+        s_prev = s[t - 1]
+        x_t = make_onehot(x[t], self.vocab_size)
+        # apart from this line
+        d_t = make_onehot(d[0], self.out_vocab_size)
+
+        delta_out_t = d_t - y_t
+        self.deltaW += np.outer(delta_out_t, s_t)
+
+        delta_in_t = (self.W.T @ delta_out_t) * grad(s_t)
+        self.deltaV += np.outer(delta_in_t, x_t)
+
+        self.deltaU += np.outer(delta_in_t, s_prev)
         
     def acc_deltas_bptt(self, x, d, y, s, steps):
         '''
@@ -169,9 +184,9 @@ class RNN(Model):
                 s_prev_current = s[t-tau-1]
 
                 if tau:
-                    delta_in_current = (self.U.T @ delta_in_current) * (s_current * (1 - s_current))
+                    delta_in_current = (self.U.T @ delta_in_current) * grad(s_current)
                 else:
-                    delta_in_current = (self.W.T @ delta_out_t) * (s_current * (1 - s_current))
+                    delta_in_current = (self.W.T @ delta_out_t) * grad(s_current)
 
                 self.deltaV += np.outer(delta_in_current, x_current)
 
@@ -196,8 +211,33 @@ class RNN(Model):
         
         no return values
         '''
-        pass
-
         ##########################
         # --- your code here --- #
         ##########################
+        t = len(x) - 1
+
+        # copied from non-np function
+        y_t = y[t]
+        s_t = s[t]
+        # apart from this line
+        d_t = make_onehot(d[0], self.out_vocab_size)
+
+        delta_out_t = d_t - y_t
+        self.deltaW += np.outer(delta_out_t, s_t)
+
+        delta_in_current = None
+        possible_steps = min(t, steps)
+
+        for tau in range(possible_steps + 1):
+            x_current = make_onehot(x[t - tau], self.vocab_size)
+            s_current = s[t - tau]
+            s_prev_current = s[t - tau - 1]
+
+            if tau:
+                delta_in_current = (self.U.T @ delta_in_current) * grad(s_current)
+            else:
+                delta_in_current = (self.W.T @ delta_out_t) * grad(s_current)
+
+            self.deltaV += np.outer(delta_in_current, x_current)
+
+            self.deltaU += np.outer(delta_in_current, s_prev_current)
