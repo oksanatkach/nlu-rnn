@@ -502,8 +502,23 @@ if __name__ == "__main__":
         ##########################
         # --- your code here --- #
         ##########################
+        # TODO verify this
+        rnn = RNN(vocab_size, hdim, 2)
+        runner = Runner(rnn)
 
-        acc = 0.
+        runner.train_np(X_train, D_train, X_dev, D_dev, learning_rate=lr, back_steps=lookback)
+
+        # load test data
+        sents = load_np_dataset(data_folder + '/wiki-test.txt')
+        S_test = docs_to_indices(sents, word_to_num, 0, 0)
+        X_test, D_test = seqs_to_npXY(S_train)
+
+        correct = 0
+
+        for x, d in zip(X_test, D_test):
+            correct += runner.compute_acc_np(x, d)
+
+        acc = correct / len(X_test)
 
         print("Accuracy: %.03f" % acc)
 
@@ -551,7 +566,22 @@ if __name__ == "__main__":
         ##########################
         # --- your code here --- #
         ##########################
+        # TODO verify this
+        gru = GRU(vocab_size, hdim, 2)
+        runner = Runner(gru)
 
-        acc = 0.
+        runner.train_np(X_train, D_train, X_dev, D_dev, learning_rate=lr, back_steps=lookback)
+
+        # load test data
+        sents = load_np_dataset(data_folder + '/wiki-test.txt')
+        S_test = docs_to_indices(sents, word_to_num, 0, 0)
+        X_test, D_test = seqs_to_npXY(S_train)
+
+        correct = 0
+
+        for x, d in zip(X_test, D_test):
+            correct += runner.compute_acc_np(x, d)
+
+        acc = correct / len(X_test)
 
         print("Accuracy: %.03f" % acc)
