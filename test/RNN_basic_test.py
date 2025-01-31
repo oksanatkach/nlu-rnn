@@ -142,4 +142,4 @@ class Test(TestCase):
     def test_compute_accuracy_for_binary_prediction(self):
         acc_expected = 1
         acc = self.p.compute_acc_np(self.x, self.d_np)
-        self.assertEquals(acc, acc_expected)
+        self.assertEqual(acc, acc_expected)

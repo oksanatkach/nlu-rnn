@@ -1,7 +1,10 @@
-.idea/
+.idea/*
+documents/*
 venv/
 code/__pycache__/*
 .DS_Store
 __pycache__/*
 test/__pycache__/*
-
+code/.ipynb_checkpoints/
+code/my_runner.py
+notebooks/.ipynb_checkpoints/*

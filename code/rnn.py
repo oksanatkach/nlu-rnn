@@ -132,7 +132,6 @@ class RNN(Model):
         
         no return values
         '''
-
         t = len(x)-1
         delta_out_t = make_onehot(d[0], self.vocab_size) - y[t]
         self.deltaW += np.outer(delta_out_t, s[t])
@@ -145,7 +144,7 @@ class RNN(Model):
 
         # wrt U
         self.deltaU += np.outer(delta_in_t, s[t-1])
-        
+
     def acc_deltas_bptt(self, x, d, y, s, steps):
         '''
         accumulate updates for V, W, U
