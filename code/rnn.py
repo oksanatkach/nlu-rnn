@@ -133,7 +133,7 @@ class RNN(Model):
         no return values
         '''
         t = len(x)-1
-        delta_out_t = make_onehot(d[0], self.vocab_size) - y[t]
+        delta_out_t = make_onehot(d[0], self.out_vocab_size) - y[t]
         self.deltaW += np.outer(delta_out_t, s[t])
 
         sigmoid_derivative = s[t] * (np.ones(s[t].shape) - s[t])

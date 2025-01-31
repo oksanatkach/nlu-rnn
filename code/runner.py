@@ -331,7 +331,12 @@ class Runner(object):
             for i in range(len(X)):
                 c = i + 1
                 if log:
-                    stdout.write("\b" * len(str(i)))
+                    # stdout.write("\b" * len(str(i)))
+                    # TODO: this loop is to make this work in jupyter notebook, remove before submitting code
+                    for _ in range(len(str(i))):
+                        stdout.write("\b")
+                        stdout.flush()
+
                     stdout.write("{0}".format(c))
                     stdout.flush()
                 p = permutation[i]
