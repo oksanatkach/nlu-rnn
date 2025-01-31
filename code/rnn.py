@@ -114,7 +114,7 @@ class RNN(Model):
         ##########################
         # --- your code here --- #
         ##########################
-        
+
     def acc_deltas_bptt(self, x, d, y, s, steps):
         '''
         accumulate updates for V, W, U
@@ -139,7 +139,6 @@ class RNN(Model):
             # --- your code here --- #
             ##########################
 
-
     def acc_deltas_bptt_np(self, x, d, y, s, steps):
         '''
         accumulate updates for V, W, U
@@ -159,7 +158,6 @@ class RNN(Model):
         no return values
         '''
         pass
-
         ##########################
         # --- your code here --- #
         ##########################
