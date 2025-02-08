@@ -1,0 +1,4 @@
+hidden_units,accuracy
+10, 0.672
+25, 0.718
+50, 0.757
