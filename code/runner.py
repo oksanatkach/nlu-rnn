@@ -408,7 +408,7 @@ if __name__ == "__main__":
         code for training language model.
         change this to different values, or use it to get you started with your own testing class
         '''
-        train_size = 1000
+        train_size = 25000
         dev_size = 1000
         vocab_size = 2000
 
@@ -449,21 +449,24 @@ if __name__ == "__main__":
         ##########################
         # --- your code here --- #
         ##########################
-        # TODO verify this, save matrices
         rnn = RNN(vocab_size, hdim, vocab_size)
         runner = Runner(rnn)
 
         run_loss = runner.train(X_train, D_train, X_dev, D_dev, learning_rate=lr, back_steps=lookback)
         final_params = {"U": runner.model.U, "V": runner.model.V, "W": runner.model.W}
 
-        print("Run loss: %.03f" % np.exp(run_loss))
+        np.save("results/rnn.U.npy", final_params["U"])
+        np.save("results/rnn.V.npy", final_params["V"])
+        np.save("results/rnn.W.npy", final_params["W"])
+
+        print("Dev Perplexity: %.03f" % np.exp(run_loss))
 
     if mode == "train-np-rnn":
         '''
         starter code for parameter estimation.
         change this to different values, or use it to get you started with your own testing class
         '''
-        train_size = 10000
+        train_size = 2000
         dev_size = 1000
         vocab_size = 2000
 
@@ -502,32 +505,31 @@ if __name__ == "__main__":
         ##########################
         # --- your code here --- #
         ##########################
-        # TODO verify this
         rnn = RNN(vocab_size, hdim, 2)
         runner = Runner(rnn)
 
         runner.train_np(X_train, D_train, X_dev, D_dev, learning_rate=lr, back_steps=lookback)
 
-        # load test data
-        sents = load_np_dataset(data_folder + '/wiki-test.txt')
-        S_test = docs_to_indices(sents, word_to_num, 0, 0)
-        X_test, D_test = seqs_to_npXY(S_train)
-
-        correct = 0
-
-        for x, d in zip(X_test, D_test):
-            correct += runner.compute_acc_np(x, d)
-
-        acc = correct / len(X_test)
-
-        print("Accuracy: %.03f" % acc)
+        # # load test data
+        # sents = load_np_dataset(data_folder + '/wiki-test.txt')
+        # S_test = docs_to_indices(sents, word_to_num, 0, 0)
+        # X_test, D_test = seqs_to_npXY(S_train)
+        #
+        # correct = 0
+        #
+        # for x, d in zip(X_test, D_test):
+        #     correct += runner.compute_acc_np(x, d)
+        #
+        # acc = correct / len(X_test)
+        #
+        # print("Test Accuracy: %.03f" % acc)
 
     if mode == "train-np-gru":
         '''
         starter code for parameter estimation.
         change this to different values, or use it to get you started with your own testing class
         '''
-        train_size = 10000
+        train_size = 2000
         dev_size = 1000
         vocab_size = 2000
 
@@ -566,22 +568,21 @@ if __name__ == "__main__":
         ##########################
         # --- your code here --- #
         ##########################
-        # TODO verify this
         gru = GRU(vocab_size, hdim, 2)
         runner = Runner(gru)
 
         runner.train_np(X_train, D_train, X_dev, D_dev, learning_rate=lr, back_steps=lookback)
 
-        # load test data
-        sents = load_np_dataset(data_folder + '/wiki-test.txt')
-        S_test = docs_to_indices(sents, word_to_num, 0, 0)
-        X_test, D_test = seqs_to_npXY(S_train)
-
-        correct = 0
-
-        for x, d in zip(X_test, D_test):
-            correct += runner.compute_acc_np(x, d)
-
-        acc = correct / len(X_test)
-
-        print("Accuracy: %.03f" % acc)
+        # # load test data
+        # sents = load_np_dataset(data_folder + '/wiki-test.txt')
+        # S_test = docs_to_indices(sents, word_to_num, 0, 0)
+        # X_test, D_test = seqs_to_npXY(S_train)
+        #
+        # correct = 0
+        #
+        # for x, d in zip(X_test, D_test):
+        #     correct += runner.compute_acc_np(x, d)
+        #
+        # acc = correct / len(X_test)
+        #
+        # print("Test Accuracy: %.03f" % acc)
