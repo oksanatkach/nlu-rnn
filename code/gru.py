@@ -103,5 +103,5 @@ class GRU(GRUAbstract):
         '''
 
         t = len(x)-1
-        delta_output = make_onehot(d[0], self.vocab_size) - y[t]
+        delta_output = make_onehot(d[0], self.out_vocab_size) - y[t]
         self.backward(x, t, s, delta_output, steps)

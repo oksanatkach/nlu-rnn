@@ -8,3 +8,4 @@ test/__pycache__/*
 code/.ipynb_checkpoints/
 code/my_runner.py
 notebooks/.ipynb_checkpoints/*
+notebooks/__pycache__/*

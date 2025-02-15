@@ -1,6 +1,7 @@
 # coding: utf-8
 import sys
 import time
+import os
 
 import numpy as np
 
@@ -366,6 +367,20 @@ class Runner(object):
                 stdout.write("\tnew loss: {0}".format(loss))
                 stdout.write("\tnew acc: {0}".format(acc))
                 stdout.flush()
+
+            if not os.path.exists(f"results/Q4_GRU/BPTT_{back_steps}"):
+                os.makedirs(f"results/Q4_GRU/BPTT_{back_steps}")
+
+            if not os.path.exists(f"results/Q4_GRU/BPTT_{back_steps}/epoch_{epoch}"):
+                os.makedirs(f"results/Q4_GRU/BPTT_{back_steps}/epoch_{epoch}")
+
+            np.save(f"results/Q4_GRU/BPTT_{back_steps}/epoch_{epoch}/Ur.npy", self.model._parameters["Ur"])
+            np.save(f"results/Q4_GRU/BPTT_{back_steps}/epoch_{epoch}/Uz.npy", self.model._parameters["Uz"])
+            np.save(f"results/Q4_GRU/BPTT_{back_steps}/epoch_{epoch}/Uh.npy", self.model._parameters["Uh"])
+            np.save(f"results/Q4_GRU/BPTT_{back_steps}/epoch_{epoch}/Vr.npy", self.model._parameters["Vr"])
+            np.save(f"results/Q4_GRU/BPTT_{back_steps}/epoch_{epoch}/Vz.npy", self.model._parameters["Vz"])
+            np.save(f"results/Q4_GRU/BPTT_{back_steps}/epoch_{epoch}/Vh.npy", self.model._parameters["Vh"])
+            np.save(f"results/Q4_GRU/BPTT_{back_steps}/epoch_{epoch}/W.npy", self.model._parameters["W"])
 
             if loss < best_loss:
                 best_loss = loss
