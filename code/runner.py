@@ -40,13 +40,9 @@ class Runner(object):
         return loss		the combined loss for all words
         '''
 
-        loss = 0.
-
-        ##########################
-        # --- your code here --- #
-        ##########################
-
-        return loss
+        y_hat, _ = self.model.predict(x)
+        d_probs = y_hat[np.arange(d.shape[0]), d]
+        return np.sum(-np.log(d_probs))
 
     def compute_loss_np(self, x, d):
         '''
@@ -61,10 +57,9 @@ class Runner(object):
         '''
 
         loss = 0.
-
-        ##########################
-        # --- your code here --- #
-        ##########################
+        y_hats, _ = self.model.predict(x)
+        true_onehot = make_onehot(d[0], self.model.out_vocab_size)
+        loss -= true_onehot @ np.log(y_hats[-1])
 
         return loss
 
@@ -79,11 +74,9 @@ class Runner(object):
         return 1 if argmax(y[t]) == d[0], 0 otherwise
         '''
 
-        ##########################
-        # --- your code here --- #
-        ##########################
+        y_hats, _ = self.model.predict(x)
 
-        return 0
+        return int(np.argmax(y_hats[-1]) == d[0])
 
     def compute_mean_loss(self, X, D):
         '''
@@ -95,11 +88,14 @@ class Runner(object):
         return mean_loss		average loss over all words in D
         '''
 
-        mean_loss = 0.
+        total_loss = 0.
+        word_count = 0
 
-        ##########################
-        # --- your code here --- #
-        ##########################
+        for x, d in zip(X, D):
+            total_loss += self.compute_loss(x, d)
+            word_count += len(x)
+
+        mean_loss = total_loss / word_count
 
         return mean_loss
 
@@ -432,13 +428,17 @@ if __name__ == "__main__":
         # this is the best expected loss out of that set
         q = vocab.freq[vocab_size] / sum(vocab.freq[vocab_size:])
 
-        ##########################
-        # --- your code here --- #
-        ##########################
+        rnn = RNN(vocab_size, hdim, vocab_size)
+        runner = Runner(rnn)
 
-        run_loss = -1
+        run_loss = runner.train(X_train, D_train, X_dev, D_dev, learning_rate=lr, back_steps=lookback)
+        final_params = {"U": runner.model.U, "V": runner.model.V, "W": runner.model.W}
 
-        print("Run loss: %.03f" % np.exp(run_loss))
+        np.save("results/rnn.U.npy", final_params["U"])
+        np.save("results/rnn.V.npy", final_params["V"])
+        np.save("results/rnn.W.npy", final_params["W"])
+
+        print("Dev Perplexity: %.03f" % np.exp(run_loss))
 
     if mode == "train-np-rnn":
         '''
@@ -481,13 +481,24 @@ if __name__ == "__main__":
         X_dev = X_dev[:dev_size]
         D_dev = D_dev[:dev_size]
 
-        ##########################
-        # --- your code here --- #
-        ##########################
+        rnn = RNN(vocab_size, hdim, 2)
+        runner = Runner(rnn)
 
-        acc = 0.
+        runner.train_np(X_train, D_train, X_dev, D_dev, learning_rate=lr, back_steps=lookback)
 
-        print("Accuracy: %.03f" % acc)
+        # # load test data
+        sents = load_np_dataset(data_folder + '/wiki-test.txt')
+        S_test = docs_to_indices(sents, word_to_num, 0, 0)
+        X_test, D_test = seqs_to_npXY(S_train)
+
+        correct = 0
+
+        for x, d in zip(X_test, D_test):
+            correct += runner.compute_acc_np(x, d)
+
+        acc = correct / len(X_test)
+
+        print("Test Accuracy: %.03f" % acc)
 
     if mode == "train-np-gru":
         '''
@@ -530,10 +541,21 @@ if __name__ == "__main__":
         X_dev = X_dev[:dev_size]
         D_dev = D_dev[:dev_size]
 
-        ##########################
-        # --- your code here --- #
-        ##########################
+        gru = GRU(vocab_size, hdim, 2)
+        runner = Runner(gru)
 
-        acc = 0.
+        runner.train_np(X_train, D_train, X_dev, D_dev, learning_rate=lr, back_steps=lookback)
 
-        print("Accuracy: %.03f" % acc)
+        # # load test data
+        sents = load_np_dataset(data_folder + '/wiki-test.txt')
+        S_test = docs_to_indices(sents, word_to_num, 0, 0)
+        X_test, D_test = seqs_to_npXY(S_train)
+
+        correct = 0
+
+        for x, d in zip(X_test, D_test):
+            correct += runner.compute_acc_np(x, d)
+
+        acc = correct / len(X_test)
+
+        print("Test Accuracy: %.03f" % acc)

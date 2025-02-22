@@ -50,12 +50,14 @@ class GRU(GRUAbstract):
 
         '''
 
-        ##########################
-        # --- your code here --- #
-        ##########################
+        x_onehot = make_onehot(x, self.vocab_size)
+        r = sigmoid(self.Vr @ x_onehot + self.Ur @ s_previous)
+        z = sigmoid(self.Vz @ x_onehot + self.Uz @ s_previous)
+        h = np.tanh(self.Vh @ x_onehot + self.Uh @ (r * s_previous))
+        s = z * s_previous + (1 - z) * h
+        y = softmax(self.W @ s)
 
         return y, s, h, z, r
-
 
     def acc_deltas_np(self, x, d, y, s):
         '''
@@ -75,9 +77,9 @@ class GRU(GRUAbstract):
         no return values
         '''
 
-        ##########################
-        # --- your code here --- #
-        ##########################
+        t = len(x) - 1
+        d_onehot = make_onehot(d[0], self.out_vocab_size)
+        delta_output = d_onehot - y[t]
         self.backward(x, t, s, delta_output)
 
     def acc_deltas_bptt_np(self, x, d, y, s, steps):
@@ -98,9 +100,8 @@ class GRU(GRUAbstract):
 
         no return values
         '''
-
-        ##########################
-        # --- your code here --- #
-        ##########################
-
+        t = len(x) - 1
+        d_onehot = make_onehot(d[0], self.out_vocab_size)
+        delta_output = d_onehot - y[t]
+        # everything but this line copied from non-bptt function
         self.backward(x, t, s, delta_output, steps)
